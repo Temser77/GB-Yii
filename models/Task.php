@@ -22,6 +22,7 @@ class Task extends Model
         ];
         // 'app\validators\StatusValidator'
     }
+    //add somethis
 
 /*    public function statusValidate($attribute, $params)
     {
