@@ -3,11 +3,11 @@
 // 1. Реализовать вывод меню на основе ​Closure table​.
 
 // берем данные из БД
-/*$sqlconnection = new PDO('mysql:host=localhost;dbname=gbalg;charset=utf8', 'root', 'root');
+$sqlconnection = new PDO('mysql:host=localhost;dbname=gb-yii;charset=utf8', 'root', '');
 $query = "SELECT * FROM categories JOIN category_links ON categories.id = category_links.cid;";
 $q = $sqlconnection->prepare($query);
 $q->execute();
-$cats = $q->fetchall(PDO::FETCH_ASSOC);*/
+$cats = $q->fetchall(PDO::FETCH_ASSOC);
 
 // строим иерархическую структуру
 function buildTree($cats, $id = 1, $level = 0)
@@ -38,7 +38,7 @@ function renderTree(array $tree) {
 }
 
 // TODO РАСКОММЕНТИРОВАТЬ
-//echo renderTree($rebuildArray);
+echo renderTree($rebuildArray);
 
 
 
@@ -88,6 +88,6 @@ function isPalindrome($string)
 }
 
 
-echo isPalindrome('ТОПОТ');
+//echo isPalindrome('ТОПОТ');
 
 
