@@ -2,10 +2,10 @@
 
 namespace app\models\tables;
 
-use Yii;
+
 
 /**
- * This is the model class for table "task".
+ * This is the model class for table "tasks".
  *
  * @property int $id
  * @property string $name
@@ -15,16 +15,17 @@ use Yii;
  * @property string $deadline
  * @property int $status_id
  *
- * @property Test $status
+ * @property Users $creator
+ * @property Users $responsible
  */
-class Task extends \yii\db\ActiveRecord
+class Tasks extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'task';
+        return 'tasks';
     }
 
     /**
@@ -37,6 +38,8 @@ class Task extends \yii\db\ActiveRecord
             [['creator_id', 'responsible_id', 'status_id'], 'integer'],
             [['deadline'], 'safe'],
             [['name', 'description'], 'string', 'max' => 255],
+            [['creator_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::class, 'targetAttribute' => ['creator_id' => 'id']],
+            [['responsible_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::class, 'targetAttribute' => ['responsible_id' => 'id']],
         ];
     }
 
@@ -56,8 +59,19 @@ class Task extends \yii\db\ActiveRecord
         ];
     }
 
-    public function getStatus()
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCreator()
     {
-        return $this->hasOne(Test::class, ['id' => 'status_id']);
+        return $this->hasOne(Users::class, ['id' => 'creator_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getResponsible()
+    {
+        return $this->hasOne(Users::class, ['id' => 'responsible_id']);
     }
 }

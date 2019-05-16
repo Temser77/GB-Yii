@@ -2,22 +2,22 @@
 
 namespace app\models\tables;
 
-use Yii;
+
 
 /**
- * This is the model class for table "test".
+ * This is the model class for table "statuses".
  *
  * @property int $id
- * @property string $test
+ * @property string $status
  */
-class Test extends \yii\db\ActiveRecord
+class Statuses extends \yii\db\ActiveRecord
 {
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'test';
+        return 'statuses';
     }
 
     /**
@@ -26,7 +26,8 @@ class Test extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['test'], 'string', 'max' => 255],
+            [['status'], 'required'],
+            [['status'], 'string', 'max' => 255],
         ];
     }
 
@@ -37,7 +38,7 @@ class Test extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'test' => 'Test',
+            'status' => 'Status',
         ];
     }
 }

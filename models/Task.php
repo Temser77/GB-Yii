@@ -3,26 +3,26 @@
 namespace app\models;
 
 use yii\base\Model;
-use app\validators\StatusValidator;
+use app\validators;
 
 class Task extends Model
 {
-    public $title;
+    public $id;
+    public $name;
     public $description;
-    public $author;
-    public $responsible;
+    public $creatorId;
+    public $responsibleId;
+    public $deadline;
     public $status;
 
     public function rules()
     {
         return [
-            [['title', 'description', 'author', 'status'], 'required'],
-            [['author', 'responsible'], 'string', 'max' => 1000],
+            [['name', 'description', 'creatorId', 'responsibleId'], 'required'],
+            [['name', 'description'], 'string', 'max' => 1000],
             [['status'], StatusValidator::class],
         ];
-        // 'app\validators\StatusValidator'
     }
-    //add somethis
 
 /*    public function statusValidate($attribute, $params)
     {
