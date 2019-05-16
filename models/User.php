@@ -35,16 +35,15 @@ class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
      */
     public static function findIdentity($id)
     {
-        $dbUser = Users::findOne($id);
-        if ($dbUser) {
-                $user = new User([
+        if ($dbUser = Users::findOne($id)) {
+                $user = [
                     'id' => $dbUser->id,
                     'username' => $dbUser->username,
                     'password' => $dbUser->password,
                     'authKey' => $dbUser->auth_key,
                     'accessToken' => $dbUser->access_token,
-                ]);
-                return $user;
+                ];
+                return new static($user);
 
         }
         else {
@@ -75,16 +74,15 @@ class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
      */
     public static function findByUsername($username)
     {
-        $dbUser = Users::findOne(['username' => $username]);
-        if ($dbUser) {
-            $user = new User([
+        if ($dbUser = Users::findOne(['username' => $username])) {
+            $user = [
                 'id' => $dbUser->id,
                 'username' => $dbUser->username,
                 'password' => $dbUser->password,
                 'authKey' => $dbUser->auth_key,
                 'accessToken' => $dbUser->access_token,
-            ]);
-            return $user;
+            ];
+            return new static($user);
         } else {
             return null;
         }
@@ -129,7 +127,6 @@ class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
      */
     public function validatePassword($password)
     {
-
         return $this->password === $password;
     }
 }

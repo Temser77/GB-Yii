@@ -1,29 +1,28 @@
 <?php
 namespace app\controllers;
 
-use app\models\Task;
+
+use app\models\tables\Users;
 use Yii;
-use yii\filters\AccessControl;
 use yii\web\Controller;
-use yii\web\Response;
-use yii\filters\VerbFilter;
-use app\models\LoginForm;
-use app\models\ContactForm;
+
 
 class TaskController extends Controller {
     public function actionIndex() {
-        $model = new Task();
-        $model->setAttributes([
-            'title' => 'Изучение Yii2',
-            'description' => 'Моя первая задача',
-            'status' => 'Выполнена',
-            'author' => 'Петя',
-            'responsible' => 'Вася',
-        ]);
-        var_dump($model->validate());
-        var_dump($model->getErrors());
+        //$model = new Users();
+        //$array = $model->find()->select('id')->all();
+        //$ar = ArrayHelper::toArray($model->find()->all());
+        //$arr = ArrayHelper::map(app\models\tables\Users::find()->all(),'id', 'username');
 
-
+        $users = new Users();
+        var_dump($users->findOne(['username' => Yii::$app->user->identity->username])->toArray(['id', 'username']));
+exit;
+        /* var_dump(Task::find()
+             ->select("name, description")
+             ->where("id > :id")
+             ->params([":id" => 2])
+             ->all()
+         );  //SELECT * FROM task*/
         //return $this->render('task');
 
 
