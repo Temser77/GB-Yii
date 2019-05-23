@@ -2,15 +2,17 @@
 
 namespace app\controllers;
 
+use app\models\events\SendEmailNotification;
 use app\models\tables\Statuses;
 use Yii;
 use app\models\tables\Users;
+use app\models\User;
 use app\models\tables\Tasks;
 use app\models\filters\TasksFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use yii\helpers\ArrayHelper;
+use yii\base\Event;
 
 /**
  * TaskManagerController implements the CRUD actions for Tasks model.
@@ -39,11 +41,13 @@ class TaskManagerController extends Controller
     public function actionIndex()
     {
         $searchModel = new TasksFilter();
+        $usersList = Users::getUsersList();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'usersList' => $usersList
         ]);
     }
 
@@ -55,8 +59,10 @@ class TaskManagerController extends Controller
      */
     public function actionView($id)
     {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
+        $model = $this->findModel($id);
+
+        return $this->render('viewone', [
+            'model' => $model,
         ]);
     }
 
@@ -67,31 +73,47 @@ class TaskManagerController extends Controller
      */
     public function actionCreate()
     {
-        if (!isset(Yii::$app->user->identity->username)) {
+
+        if (Yii::$app->user->isGuest) {
             return $this->redirect(['cannotcreate']);
         }
         $model = new Tasks();
-        $users = new Users();
-        $statuses = new Statuses();
-        $rights = $this->checkUserRights();
+
+        Event::on(Tasks::class, Tasks::EVENT_AFTER_INSERT, function ($event) {
+            $task = $event->sender;
+            $message = Yii::$app->mailer->compose('emailNotification', ['task' => $task]);
+            if (Yii::$app->user->isGuest) {
+                $message->setFrom('from@domain.com');
+            } else {
+                $message->setFrom($task->creator->email);
+            }
+            $message->setTo($task->responsible->email)
+                ->setSubject('Вам поступила новая задача ' . $task->name)
+                ->send();
+        });
 
 
-        $authUser[] = $users->findOne(['username' => Yii::$app->user->identity->username])->toArray(['id', 'username']);
+        $usersList = Users::getUsersList();
+        $statuses = Statuses::getStatusesList();
+        $rights = $this->checkCreateRights();
+
+        $authUser[] = Users::findOne(Yii::$app->user->id)->toArray(['id', 'username']);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['viewone', 'id' => $model->id]);
         }
 
         return $this->render('create', [
             'model' => $model,
-            'users' => $users,
+            'usersList' => $usersList,
             'statuses' => $statuses,
             'rights' => $rights,
             'authUser' => $authUser
         ]);
     }
 
-    public function actionCannotcreate() {
+    public function actionCannotcreate()
+    {
         return $this->render('cannotcreate');
     }
 
@@ -109,19 +131,19 @@ class TaskManagerController extends Controller
             return $this->redirect(['cannotcreate']);
         }
         $model = $this->findModel($id);
-        $users = new Users();
-        $statuses = new Statuses();
+
+        $usersList = Users::getUsersList();
+        $statuses = Statuses::getStatusesList();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['index']);
         }
 
-
-        $authUser[] = $users->findOne(['username' => Yii::$app->user->identity->username])->toArray(['id', 'username']);
+        $authUser[] = Users::findOne(['username' => Yii::$app->user->identity->username])->toArray(['id', 'username']);
 
         return $this->render('update', [
             'model' => $model,
-            'users' => $users,
+            'usersList' => $usersList,
             'statuses' => $statuses,
             'rights' => true,
             'authUser' => $authUser
@@ -158,7 +180,8 @@ class TaskManagerController extends Controller
         throw new NotFoundHttpException('The requested page does not exist.');
     }
 
-    public function checkUserRights() {
+    public function checkCreateRights()
+    {
         return Yii::$app->user->identity->username == 'admin';
-        }
+    }
 }

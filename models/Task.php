@@ -20,7 +20,6 @@ class Task extends Model
         return [
             [['name', 'description', 'creatorId', 'responsibleId'], 'required'],
             [['name', 'description'], 'string', 'max' => 1000],
-            [['status'], StatusValidator::class],
         ];
     }
 

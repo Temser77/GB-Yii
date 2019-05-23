@@ -5,9 +5,10 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\tables\Tasks */
 /* @var $users app\models\tables\Users */
-/* @var $statuses app\models\tables\Statuses */
 /* @var $rights */
+/* @var $usersList */
 /* @var $authUser */
+/* @var $statuses */
 
 $this->title = $model->name;
 $this->params['breadcrumbs'][] = ['label' => 'Tasks', 'url' => ['index']];
@@ -19,10 +20,9 @@ $this->params['breadcrumbs'][] = ['label' => $model->name, 'url' => ['update', '
 
     <?= $this->render('_form', [
         'model' => $model,
-        'users' => $users,
+        'usersList' => $usersList,
         'statuses' => $statuses,
         'rights' => $rights,
-        'authUser' => $authUser
     ]) ?>
 
 </div>

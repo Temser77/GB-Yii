@@ -4,6 +4,9 @@ namespace app\models\tables;
 
 
 
+use \yii\behaviors\TimestampBehavior;
+use yii\db\Expression;
+
 /**
  * This is the model class for table "tasks".
  *
@@ -14,9 +17,12 @@ namespace app\models\tables;
  * @property int $responsible_id
  * @property string $deadline
  * @property int $status_id
+ * @property string created
+ * @property string updated
  *
  * @property Users $creator
  * @property Users $responsible
+ * @property Statuses $status
  */
 class Tasks extends \yii\db\ActiveRecord
 {
@@ -31,6 +37,19 @@ class Tasks extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
+
+    public function behaviors()
+    {
+        return [
+          [
+              'class' => TimestampBehavior::className(),
+              'createdAtAttribute' => 'created',
+              'updatedAtAttribute' => 'updated',
+              'value' => new Expression('NOW()'),
+          ],
+      ];
+    }
+
     public function rules()
     {
         return [
@@ -50,12 +69,12 @@ class Tasks extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'name' => 'Name',
-            'description' => 'Description',
-            'creator_id' => 'Creator ID',
-            'responsible_id' => 'Responsible ID',
-            'deadline' => 'Deadline',
-            'status_id' => 'Status ID',
+            'name' => 'Название задачи',
+            'description' => 'Описание задачи',
+            'creator_id' => 'Создал',
+            'responsible_id' => 'Ответственный',
+            'deadline' => 'Срок до',
+            'status_id' => 'Статус',
         ];
     }
 
@@ -70,8 +89,26 @@ class Tasks extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
+    public function getStatus()
+    {
+        return $this->hasOne(Statuses::class, ['id' => 'status_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getResponsible()
     {
         return $this->hasOne(Users::class, ['id' => 'responsible_id']);
     }
+
+    public function setCreated($value) {
+        $this->created = $value;
+    }
+
+    public function setUpdated($value) {
+        $this->updated = $value;
+    }
+
+
 }

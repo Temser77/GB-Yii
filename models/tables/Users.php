@@ -12,6 +12,7 @@ namespace app\models\tables;
  * @property string $password
  * @property string $auth_key
  * @property string $access_token
+ * @property array $usersList
  */
 class Users extends \yii\db\ActiveRecord
 {
@@ -48,4 +49,13 @@ class Users extends \yii\db\ActiveRecord
             'access_token' => 'Access Token',
         ];
     }
+
+    public static function getUsersList() {
+        return self::find()
+            ->select(['username'])
+            ->indexBy('id')
+            ->column();
+    }
+
+
 }

@@ -27,13 +27,15 @@ switch ($model->status_id) {
 
 ?>
 
-<div class="card" style="width: 18rem;">
+<div class="card">
 
         <?= Html::beginTag('div', ['class' => ['card-body', $statusColorClass]])?>
         <?= Html::tag('h2', Html::encode($model->name), ['class' => 'card-title']) ?>
+    <?= Html::tag('h3', Html::encode($model->responsible->username), ['class' => 'card-title']) ?>
         <?= Html::tag('p', Html::encode($model->description), ['class' => 'card-text']) ?>
-        <p>
-            <?= Html::a('...', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+        <div class="item-buttons-group">
+            <?= Html::a('Просмотреть', ['view', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+            <?= Html::a('Изменить', ['update', 'id' => $model->id], ['class' => 'btn btn-warning']) ?>
             <?= Html::a('Удалить', ['delete', 'id' => $model->id], [
                 'class' => 'btn btn-danger',
                 'data' => [
@@ -41,7 +43,7 @@ switch ($model->status_id) {
                     'method' => 'post',
                 ],
             ]) ?>
-        </p>
+        </div>
         <?= Html::endTag('div')?>
 
 </div>

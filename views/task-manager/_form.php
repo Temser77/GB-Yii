@@ -7,11 +7,11 @@ use yii\helpers\ArrayHelper;
 /* @var $this yii\web\View */
 /* @var $model app\models\tables\Tasks */
 /* @var $users app\models\tables\Users */
-/* @var $statuses app\models\tables\Statuses */
 /* @var $form yii\widgets\ActiveForm */
 /* @var $rights */
+/* @var $usersList */
 /* @var $authUser */
-//<?= $form->field($model, 'creator_id')->textInput(['readonly' => true, 'value' => $authUser['id']])
+/* @var $statuses */
 
 
 ?>
@@ -25,19 +25,19 @@ use yii\helpers\ArrayHelper;
     <?= $form->field($model, 'description')->textInput(['maxlength' => true]) ?>
 
     <?php if ($rights): ?>
-        <?= $form->field($model, 'creator_id')->dropDownList(ArrayHelper::map($users->find()->all(),'id', 'username')) ?>
+        <?= $form->field($model, 'creator_id')->dropDownList($usersList) ?>
     <?php endif; ?>
 
 
     <?php if (!$rights): ?>
-        <?= $form->field($model, 'creator_id')->dropDownList(ArrayHelper::map($authUser,'id','username'), ['disabled' => true]) ?>
+        <?= $form->field($model, 'creator_id')->dropDownList(ArrayHelper::map($authUser, 'id', 'username')) ?>
     <?php endif; ?>
 
-    <?= $form->field($model, 'responsible_id')->dropDownList(ArrayHelper::map($users->find()->all(),'id', 'username')) ?>
+    <?= $form->field($model, 'responsible_id')->dropDownList($usersList) ?>
 
     <?= $form->field($model, 'deadline')->textInput(['type' => 'date']) ?>
 
-    <?= $form->field($model, 'status_id')->dropDownList(ArrayHelper::map($statuses->find()->all(),'id', 'status')) ?>
+    <?= $form->field($model, 'status_id')->dropDownList($statuses) ?>
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>

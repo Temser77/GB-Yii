@@ -7,6 +7,7 @@ use yii\helpers\Html;
 /* @var $users app\models\tables\Users */
 /* @var $statuses app\models\tables\Statuses */
 /* @var $rights */
+/* @var $usersList */
 /* @var $authUser */
 
 $this->title = 'Create Tasks';
@@ -19,7 +20,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= $this->render('_form', [
         'model' => $model,
-        'users' => $users,
+        'usersList' => $usersList,
         'statuses' => $statuses,
         'rights' => $rights,
         'authUser' => $authUser

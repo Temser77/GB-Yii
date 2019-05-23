@@ -9,6 +9,7 @@ namespace app\models\tables;
  *
  * @property int $id
  * @property string $status
+ * @property array $statusesList
  */
 class Statuses extends \yii\db\ActiveRecord
 {
@@ -40,5 +41,11 @@ class Statuses extends \yii\db\ActiveRecord
             'id' => 'ID',
             'status' => 'Status',
         ];
+    }
+    public static function getStatusesList() {
+        return self::find()
+            ->select(['status'])
+            ->indexBy('id')
+            ->column();
     }
 }

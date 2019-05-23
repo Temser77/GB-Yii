@@ -52,6 +52,8 @@ class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
         //return isset(self::$users[$id]) ? new static(self::$users[$id]) : null;
     }
 
+
+
     /**
      * {@inheritdoc}
      */
@@ -102,6 +104,12 @@ class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
     {
         return $this->id;
     }
+
+    public function getUsername()
+    {
+        return $this->username;
+    }
+
 
     /**
      * {@inheritdoc}

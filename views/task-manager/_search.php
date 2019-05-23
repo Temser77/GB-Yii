@@ -6,6 +6,7 @@ use yii\widgets\ActiveForm;
 /* @var $this yii\web\View */
 /* @var $model app\models\filters\TasksFilter */
 /* @var $form yii\widgets\ActiveForm */
+/* @var $usersList */
 ?>
 
 <div class="tasks-search">
@@ -15,15 +16,13 @@ use yii\widgets\ActiveForm;
         'method' => 'get',
     ]); ?>
 
-    <?= $form->field($model, 'id') ?>
-
     <?= $form->field($model, 'name') ?>
 
     <?= $form->field($model, 'description') ?>
 
-    <?= $form->field($model, 'creator_id') ?>
+    <?= $form->field($model, 'creator_id')->dropDownList($usersList) ?>
 
-    <?= $form->field($model, 'responsible_id') ?>
+    <?= $form->field($model, 'responsible_id')->dropDownList($usersList) ?>
 
     <?php // echo $form->field($model, 'deadline') ?>
 

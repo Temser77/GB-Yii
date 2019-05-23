@@ -18,19 +18,17 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= Html::a('Create Tasks', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
-    <?php echo $this->render('_search', ['model' => $searchModel]); ?>
+    <?php echo $this->render('_search', [
+        'model' => $searchModel,
+        'usersList' => $usersList
+    ]); ?>
 
     <?= ListView::widget([
         'dataProvider' => $dataProvider,
         'itemOptions' => ['class' => 'item'],
         'itemView' => 'view',
-        'viewParams' => ['hidecrumbs' => true]
-      /*  'itemView' => function ($model, $key, $index, $widget) {
-
-
-            return Html::a(Html::encode($model->name), ['view', 'id' => $model->id]);
-        },*/
-
+        'viewParams' => ['hidecrumbs' => true],
+        'summary' => false,
     ]) ?>
 
 
