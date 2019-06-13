@@ -6,18 +6,44 @@ $db = require __DIR__ . '/db.php';
 $config = [
     'id' => 'basic',
     'basePath' => dirname(__DIR__),
-    'bootstrap' => ['log'],
+    'language' => 'ru-RU',
+    'bootstrap' => ['log', 'custombootstrap'],
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
-        '@npm'   => '@vendor/npm-asset',
+        '@npm' => '@vendor/npm-asset',
+        '@commentsImg' => '@app/web/comments-img'
     ],
     'components' => [
+        'i18n' => [
+            'translations' => [
+                'app*' => [
+                    'class' => \yii\i18n\PhpMessageSource::class,
+                    'basePath' => '@app/translations'
+                ]
+            ]
+
+        ],
+        'custombootstrap' => [
+            'class' => \app\components\CustomBootstrap::class
+        ],
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'hLCXYjnvf4b_uP6qdBzKDQkgPVyRqUVD',
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
+            //'class' => 'yii\redis\Cache',
+            //'redis' => [
+            //    'hostname' => 'localhost',
+            //    'port' => 6379,
+            //    'database' => 0
+            //]
+        ],
+        'redis' => [
+            'class' => 'yii\redis\Connection',
+            'hostname' => 'localhost',
+            'port' => 6379,
+            'database' => 0,
         ],
         'user' => [
             'identityClass' => 'app\models\User',
@@ -45,7 +71,7 @@ $config = [
         'db' => $db,
 
         'urlManager' => [
-            'enablePrettyUrl' => true,
+            'enablePrettyUrl' => false,
             'showScriptName' => false,
             'rules' => [
             ],

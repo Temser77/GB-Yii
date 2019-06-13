@@ -1,4 +1,6 @@
 <?php
+// добавлен коммент из PHP Storm
+
 
 // 1. Реализовать вывод меню на основе ​Closure table​.
 
@@ -8,6 +10,8 @@ $query = "SELECT * FROM categories JOIN category_links ON categories.id = catego
 $q = $sqlconnection->prepare($query);
 $q->execute();
 $cats = $q->fetchall(PDO::FETCH_ASSOC);
+
+
 
 // строим иерархическую структуру
 function buildTree($cats, $id = 1, $level = 0)
@@ -38,18 +42,18 @@ function renderTree(array $tree) {
 }
 
 // TODO РАСКОММЕНТИРОВАТЬ
-echo renderTree($rebuildArray);
+//echo renderTree($rebuildArray);
 
 
 
 // 3* Реализовать вывод меню на основе Nested sets​.
 
-// берем данные из БД
-/*$query2 = "SELECT * FROM nested_sets;";
+//берем данные из БД
+$query2 = "SELECT * FROM nested_sets;";
 $q2 = $sqlconnection->prepare($query2);
 $q2->execute();
 $nest = $q2->fetchall(PDO::FETCH_ASSOC);
-$nestMaxRight = count($nest) * 2;*/
+$nestMaxRight = count($nest) * 2;
 
 // строим иерархическую структуру
 function treeFromNest($nest, $right, $left=1, $depth=1) {

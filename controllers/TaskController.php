@@ -1,31 +1,31 @@
 <?php
 namespace app\controllers;
 
-use app\models\Task;
+
+use app\models\tables\Users;
+use Codeception\Module\Redis;
 use Yii;
-use yii\filters\AccessControl;
 use yii\web\Controller;
-use yii\web\Response;
-use yii\filters\VerbFilter;
-use app\models\LoginForm;
-use app\models\ContactForm;
+
 
 class TaskController extends Controller {
     public function actionIndex() {
-        $model = new Task();
-        $model->setAttributes([
-            'title' => 'Изучение Yii2',
-            'description' => 'Моя первая задача',
-            'status' => 'Выполнена',
-            'author' => 'Петя',
-            'responsible' => 'Вася',
-        ]);
-        var_dump($model->validate());
-        var_dump($model->getErrors());
 
 
-        //return $this->render('task');
+        $cache = Yii::$app->cache;
 
+        $data = $cache->get('number');
+
+        if ($data === false) {
+            $number = rand(1, 1000);
+            var_dump($number);
+            $cache->set('number', $number, 10);
+        }
+
+        var_dump($data);
+
+
+        //$cache->addValue('number', $number, 10);
 
     }
 
