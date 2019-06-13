@@ -2,17 +2,22 @@
 
 namespace app\controllers;
 
-use app\models\events\SendEmailNotification;
+use app\models\tables\Comments;
 use app\models\tables\Statuses;
+use app\models\UploadedCommentImage;
 use Yii;
 use app\models\tables\Users;
 use app\models\User;
 use app\models\tables\Tasks;
 use app\models\filters\TasksFilter;
+use yii\data\ActiveDataProvider;
+use yii\helpers\VarDumper;
+use yii\imagine\Image;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\base\Event;
+use yii\web\UploadedFile;
 
 /**
  * TaskManagerController implements the CRUD actions for Tasks model.
@@ -41,13 +46,21 @@ class TaskManagerController extends Controller
     public function actionIndex()
     {
         $searchModel = new TasksFilter();
-        $usersList = Users::getUsersList();
+        $usersList = ['' => "all"] + Users::getUsersList();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        // Формируем ключ для кэша вывода по месяцам
+        $FilterCacheKey = null;
+        if ($searchModel->load(Yii::$app->request->get()) && ($searchModel->created != null)) {
+            $FilterCacheKey = 'FilterCreated' . $searchModel->created;
+        }
+        //
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
-            'usersList' => $usersList
+            'usersList' => $usersList,
+            'FilterCacheKey' => $FilterCacheKey
         ]);
     }
 
@@ -60,9 +73,37 @@ class TaskManagerController extends Controller
     public function actionView($id)
     {
         $model = $this->findModel($id);
+        $modelComments = new Comments();
+
+        if ($modelComments->load(Yii::$app->request->post())) {
+            $modelUploadedFile = new UploadedCommentImage();
+            if($modelUploadedFile->uploadCommentImg($modelComments, 'uploaded_file')) {
+                $modelComments->uploaded_file = $modelUploadedFile->file->name;
+            }
+            if($modelUploadedFile->validate()) {
+                $modelComments->save();
+            }
+            return $this->redirect(['view', 'id' => $model->id]);
+        }
+
+        $query = Comments::find()->where(['task_id' => $id]);
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+            'pagination' => [
+                'pageSize' => 10
+            ],
+            'sort' => [
+                'defaultOrder' => [
+                    'created' => SORT_DESC,
+                ]
+            ]
+
+        ]);
 
         return $this->render('viewone', [
             'model' => $model,
+            'modelComments' => $modelComments,
+            'dataProvider' => $dataProvider,
         ]);
     }
 
@@ -78,21 +119,6 @@ class TaskManagerController extends Controller
             return $this->redirect(['cannotcreate']);
         }
         $model = new Tasks();
-
-        Event::on(Tasks::class, Tasks::EVENT_AFTER_INSERT, function ($event) {
-            $task = $event->sender;
-            $message = Yii::$app->mailer->compose('emailNotification', ['task' => $task]);
-            if (Yii::$app->user->isGuest) {
-                $message->setFrom('from@domain.com');
-            } else {
-                $message->setFrom($task->creator->email);
-            }
-            $message->setTo($task->responsible->email)
-                ->setSubject('Вам поступила новая задача ' . $task->name)
-                ->send();
-        });
-
-
         $usersList = Users::getUsersList();
         $statuses = Statuses::getStatusesList();
         $rights = $this->checkCreateRights();
@@ -100,7 +126,7 @@ class TaskManagerController extends Controller
         $authUser[] = Users::findOne(Yii::$app->user->id)->toArray(['id', 'username']);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['viewone', 'id' => $model->id]);
+            return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('create', [

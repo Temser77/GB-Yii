@@ -5,7 +5,6 @@
 /* @var $model app\models\tables\Tasks */
 /* @var $hidecrumbs */
 
-$this->title = $model->name;
 
 if (!isset($hidecrumbs)) {
     $hidecrumbs = false;
@@ -15,7 +14,7 @@ if (!$hidecrumbs) {
     $this->params['breadcrumbs'][] = $this->title;
 }
 
-//\yii\web\YiiAsset::register($this);
+\yii\web\YiiAsset::register($this);
 ?>
 <div class="tasks-view">
 

@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use Yii;
 use yii\filters\AccessControl;
+use yii\filters\PageCache;
 use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
@@ -18,6 +19,12 @@ class SiteController extends Controller
     public function behaviors()
     {
         return [
+            'cache' => [
+                'class' => PageCache::class,
+                'only' => ['about'],
+                'duration' => 86400,
+                'variations' => [Yii::$app->language]
+            ],
             'access' => [
                 'class' => AccessControl::className(),
                 'only' => ['logout'],
@@ -61,7 +68,17 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        return $this->redirect('index.php?r=task-manager');
+    }
+
+    /**
+     * Change language of the app.
+     * @var string language Two-letters code of language
+     * @return string
+     */
+    public function actionLanguage($language) {
+        Yii::$app->session->set('language', $language);
+        return $this->redirect(Yii::$app->request->referrer ?: Yii::$app->homeUrl);
     }
 
     /**

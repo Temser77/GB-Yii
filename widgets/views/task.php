@@ -1,6 +1,7 @@
 <?php
 
 use yii\helpers\Html;
+//use Yii;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\tables\Tasks */
@@ -34,9 +35,9 @@ switch ($model->status_id) {
     <?= Html::tag('h3', Html::encode($model->responsible->username), ['class' => 'card-title']) ?>
         <?= Html::tag('p', Html::encode($model->description), ['class' => 'card-text']) ?>
         <div class="item-buttons-group">
-            <?= Html::a('Просмотреть', ['view', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-            <?= Html::a('Изменить', ['update', 'id' => $model->id], ['class' => 'btn btn-warning']) ?>
-            <?= Html::a('Удалить', ['delete', 'id' => $model->id], [
+            <?= Html::a(Yii::t('app', 'view'), ['view', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+            <?= Html::a(Yii::t('app', 'change'), ['update', 'id' => $model->id], ['class' => 'btn btn-warning']) ?>
+            <?= Html::a(Yii::t('app', 'delete'), ['delete', 'id' => $model->id], [
                 'class' => 'btn btn-danger',
                 'data' => [
                     'confirm' => 'Are you sure you want to delete this item?',

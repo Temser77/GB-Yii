@@ -10,8 +10,8 @@ use yii\helpers\Html;
 /* @var $usersList */
 /* @var $authUser */
 
-$this->title = 'Create Tasks';
-$this->params['breadcrumbs'][] = ['label' => 'Tasks', 'url' => ['index']];
+$this->title = \Yii::t('app', 'create_task');
+$this->params['breadcrumbs'][] = ['label' => \Yii::t('app', 'tasks'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="tasks-create">

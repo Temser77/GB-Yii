@@ -3,7 +3,7 @@
 namespace app\models\tables;
 
 
-
+use Yii;
 use \yii\behaviors\TimestampBehavior;
 use yii\db\Expression;
 
@@ -69,12 +69,14 @@ class Tasks extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'name' => 'Название задачи',
-            'description' => 'Описание задачи',
-            'creator_id' => 'Создал',
-            'responsible_id' => 'Ответственный',
-            'deadline' => 'Срок до',
-            'status_id' => 'Статус',
+            'name' => Yii::t('app', 'tasks_name'),
+            'description' => Yii::t('app', 'tasks_description'),
+            'creator_id' => Yii::t('app', 'tasks_creator_id'),
+            'responsible_id' => Yii::t('app', 'tasks_responsible_id'),
+            'deadline' => Yii::t('app', 'tasks_deadline'),
+            'status_id' => Yii::t('app', 'tasks_status_id'),
+            'created' => Yii::t('app', 'tasks_created'),
+            'updated' => Yii::t('app', 'tasks_updated'),
         ];
     }
 

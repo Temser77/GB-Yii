@@ -39,7 +39,7 @@ class Statuses extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'status' => 'Status',
+            'status' => \Yii::t('app', 'status'),
         ];
     }
     public static function getStatusesList() {

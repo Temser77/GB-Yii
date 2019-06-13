@@ -18,7 +18,9 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'name') ?>
 
-    <?= $form->field($model, 'description') ?>
+    <?= $form->field($model, 'created')->textInput(['type' => 'month']) ?>
+
+    <?php // $form->field($model, 'description') ?>
 
     <?= $form->field($model, 'creator_id')->dropDownList($usersList) ?>
 
@@ -29,8 +31,8 @@ use yii\widgets\ActiveForm;
     <?php // echo $form->field($model, 'status_id') ?>
 
     <div class="form-group">
-        <?= Html::submitButton('Search', ['class' => 'btn btn-primary']) ?>
-        <?= Html::resetButton('Reset', ['class' => 'btn btn-outline-secondary']) ?>
+        <?= Html::submitButton(\Yii::t('app', 'search'), ['class' => 'btn btn-primary']) ?>
+        <?= Html::a(\Yii::t('app', 'reset'), ['index'], ['class' => 'btn btn-secondary']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

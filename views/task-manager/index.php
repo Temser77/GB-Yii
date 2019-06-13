@@ -6,8 +6,11 @@ use yii\widgets\ListView;
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\filters\TasksFilter */
 /* @var $dataProvider yii\data\ActiveDataProvider */
+/* @var $usersList */
+/* @var $FilterCacheKey */
 
-$this->title = 'Tasks';
+\yii\web\YiiAsset::register($this);
+$this->title = \Yii::t('app', 'tasks');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="tasks-index">
@@ -15,7 +18,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Create Tasks', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a(\Yii::t('app', 'create_task'), ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?php echo $this->render('_search', [
@@ -23,13 +26,23 @@ $this->params['breadcrumbs'][] = $this->title;
         'usersList' => $usersList
     ]); ?>
 
-    <?= ListView::widget([
+    <?php
+
+    if ($this->beginCache($FilterCacheKey, [
+        'duration' => 5,
+        'variations' => Yii::$app->language,
+    ])) {
+    echo ListView::widget([
         'dataProvider' => $dataProvider,
         'itemOptions' => ['class' => 'item'],
         'itemView' => 'view',
         'viewParams' => ['hidecrumbs' => true],
         'summary' => false,
-    ]) ?>
+    ]);
+        $this->endCache();
+    }
+
+    ?>
 
 
 </div>

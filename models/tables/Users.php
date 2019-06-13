@@ -1,6 +1,7 @@
 <?php
 
 namespace app\models\tables;
+use Yii;
 
 
 
@@ -43,8 +44,8 @@ class Users extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'username' => 'Username',
-            'password' => 'Password',
+            'username' => Yii::t('app', 'users_username'),
+            'password' => Yii::t('app', 'users_password'),
             'auth_key' => 'Authorization Key',
             'access_token' => 'Access Token',
         ];

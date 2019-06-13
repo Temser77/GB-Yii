@@ -5,20 +5,24 @@ namespace app\models\filters;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\tables\Tasks;
+use Yii;
 
 /**
  * TasksFilter represents the model behind the search form of `app\models\tables\Tasks`.
+ * @property string createdMonthYear
  */
 class TasksFilter extends Tasks
 {
     /**
      * {@inheritdoc}
      */
+    public $createdMonthYear;
+
     public function rules()
     {
         return [
             [['id', 'creator_id', 'responsible_id', 'status_id'], 'integer'],
-            [['name', 'description', 'deadline'], 'safe'],
+            [['name', 'description', 'deadline', 'created', 'updated'], 'safe'],
         ];
     }
 
@@ -50,6 +54,7 @@ class TasksFilter extends Tasks
 
         $this->load($params);
 
+
         if (!$this->validate()) {
             // uncomment the following line if you do not want to return any records when validation fails
             // $query->where('0=1');
@@ -65,9 +70,37 @@ class TasksFilter extends Tasks
             'status_id' => $this->status_id,
         ]);
 
+
         $query->andFilterWhere(['like', 'name', $this->name])
             ->andFilterWhere(['like', 'description', $this->description]);
 
+
+
+
+        if (isset($this->created)) {
+            $createdMonth = (int)substr($this->created, -2);
+            $createdYear = (int)substr($this->created, 0, 4);
+            $query->andFilterCompare("MONTH(created)", $createdMonth)
+                ->andFilterCompare("YEAR(created)", $createdYear);
+        }
+
+
         return $dataProvider;
     }
+
+    public function attributeLabels()
+    {
+        return [
+            'id' => 'ID',
+            'name' => Yii::t('app', 'tasks_name'),
+            'description' => Yii::t('app', 'tasks_description'),
+            'creator_id' => Yii::t('app', 'tasks_creator_id'),
+            'responsible_id' => Yii::t('app', 'tasks_responsible_id'),
+            'deadline' => Yii::t('app', 'tasks_deadline'),
+            'status_id' => Yii::t('app', 'tasks_status_id'),
+            'created' => Yii::t('app', 'tasks_created'),
+            'updated' => Yii::t('app', 'tasks_updated'),
+        ];
+    }
+
 }
