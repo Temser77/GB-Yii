@@ -71,9 +71,14 @@ $config = [
         'db' => $db,
 
         'urlManager' => [
-            'enablePrettyUrl' => false,
+            'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                //'tasks' => 'task/index',
+                //'task/<id:\d+>' => 'task/one',
+                //'task/<id:\w+>' => 'task/two',
+                //'GET task/<id>' => 'task/one',
+                //'POST task/<id>' =>  'task/two',
             ],
         ],
 
