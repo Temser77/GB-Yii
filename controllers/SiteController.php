@@ -5,6 +5,7 @@ namespace app\controllers;
 use Yii;
 use yii\filters\AccessControl;
 use yii\filters\PageCache;
+use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
@@ -68,7 +69,7 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->redirect('index.php?r=task-manager');
+        return $this->redirect(Url::to('/myshop.local/web/task-manager'));
     }
 
     /**

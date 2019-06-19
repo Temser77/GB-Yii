@@ -42,7 +42,7 @@ class Tasks extends \yii\db\ActiveRecord
     {
         return [
           [
-              'class' => TimestampBehavior::className(),
+              'class' => TimestampBehavior::class,
               'createdAtAttribute' => 'created',
               'updatedAtAttribute' => 'updated',
               'value' => new Expression('NOW()'),

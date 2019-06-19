@@ -2,8 +2,8 @@
 
 use yii\helpers\Html;
 /* @var $model app\models\tables\Comments */
-$previewImgPath = "comments-img/small/" . $model->uploaded_file;
-$ImgPath = "comments-img/" . $model->uploaded_file;
+$previewImgPath = Yii::getAlias('@web') . "/comments-img/small/" . $model->uploaded_file;
+$ImgPath = Yii::getAlias('@web') . "/comments-img/" . $model->uploaded_file;
 ?>
 
 

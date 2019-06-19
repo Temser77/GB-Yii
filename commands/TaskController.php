@@ -16,10 +16,13 @@ use Yii;
 
 class TaskController extends Controller
 {
+    /**
+     * Send emails to all resposible users when task deadline is tomorrow
+     */
     public function actionNotify() {
         echo 'START';
         $date = date('Y-m-d', strtotime('+1 day'));
-        $tasks = Tasks::find()->where(['<','deadline',$date])->indexBy('id')->all();
+        $tasks = Tasks::find()->where(['<','deadline',$date])->with('responsible')->indexBy('id')->all();
         $totalTasks = count($tasks);
         Console::startProgress(0, $totalTasks);
         $i = 1;

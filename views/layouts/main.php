@@ -9,8 +9,11 @@ use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
+use app\assets\TaskAsset;
+use \yii\helpers\Url;
 
 AppAsset::register($this);
+TaskAsset::register($this);
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -19,7 +22,6 @@ AppAsset::register($this);
     <meta charset="<?= Yii::$app->charset ?>">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="css/jquery.fancybox.min.css" rel="stylesheet">
 
     <?php $this->registerCsrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
@@ -42,7 +44,7 @@ AppAsset::register($this);
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => [
-            ['label' => \Yii::t('app', 'Home'), 'url' => ['/site/index']],
+            ['label' => \Yii::t('app', 'Home'), 'url' => ['/task-manager']],
             ['label' => \Yii::t('app', 'About'), 'url' => ['/site/about']],
             ['label' => \Yii::t('app', 'Contact'), 'url' => ['/site/contact']],
             Yii::$app->user->isGuest ? (
@@ -58,8 +60,8 @@ AppAsset::register($this);
                 . '</li>'
 
             ),
-            ['label' => Html::img('img/en.jpg'), 'encode' => false, 'url' => ['site/language', 'language' => 'en']],
-            ['label' => Html::img('img/ru.jpg'), 'encode' => false, 'url' => ['site/language', 'language' => 'ru']],
+            ['label' => Html::img(Yii::getAlias('@web') . '/img/en.jpg'), 'encode' => false, 'url' => ['site/language', 'language' => 'en']],
+            ['label' => Html::img(Yii::getAlias('@web') . '/img/ru.jpg'), 'encode' => false, 'url' => ['site/language', 'language' => 'ru']],
         ],
     ]);
     NavBar::end();
@@ -85,6 +87,5 @@ AppAsset::register($this);
 
 <?php $this->endBody() ?>
 </body>
-<script src="js/jquery.fancybox.min.js"></script>
 </html>
 <?php $this->endPage() ?>

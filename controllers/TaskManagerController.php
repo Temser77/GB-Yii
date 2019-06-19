@@ -11,6 +11,7 @@ use app\models\User;
 use app\models\tables\Tasks;
 use app\models\filters\TasksFilter;
 use yii\data\ActiveDataProvider;
+use yii\filters\AccessControl;
 use yii\helpers\VarDumper;
 use yii\imagine\Image;
 use yii\web\Controller;
@@ -34,6 +35,22 @@ class TaskManagerController extends Controller
                 'class' => VerbFilter::class,
                 'actions' => [
                     'delete' => ['POST'],
+                ],
+            ],
+            'access' => [
+                'class' => AccessControl::class,
+                //'only' => ['login', 'logout', 'signup'],
+                'rules' => [
+                    [
+                        'allow' => false,
+                        //'actions' => ['login', 'signup'],
+                        'roles' => ['?'],
+                    ],
+                    [
+                        'allow' => true,
+                        //'actions' => ['logout'],
+                        'roles' => ['@'],
+                    ],
                 ],
             ],
         ];

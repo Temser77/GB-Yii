@@ -3,8 +3,10 @@
 namespace app\models;
 
 use app\models\tables\Users;
+use yii\db\ActiveRecord;
+use yii\web\ForbiddenHttpException;
 
-class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
+class User extends ActiveRecord implements \yii\web\IdentityInterface
 {
     public $id;
     public $username;
@@ -29,6 +31,13 @@ class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
         ],
     ];*/
 
+    /**
+     * {@inheritdoc}
+     */
+    public static function tableName()
+    {
+        return 'users';
+    }
 
     /**
      * {@inheritdoc}
