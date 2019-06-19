@@ -2,7 +2,11 @@
 
 namespace app\models;
 
-class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
+use app\models\tables\Users;
+use yii\db\ActiveRecord;
+use yii\web\ForbiddenHttpException;
+
+class User extends ActiveRecord implements \yii\web\IdentityInterface
 {
     public $id;
     public $username;
@@ -10,7 +14,7 @@ class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
     public $authKey;
     public $accessToken;
 
-    private static $users = [
+/*    private static $users = [
         '100' => [
             'id' => '100',
             'username' => 'admin',
@@ -25,27 +29,50 @@ class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
             'authKey' => 'test101key',
             'accessToken' => '101-token',
         ],
-    ];
+    ];*/
 
+    /**
+     * {@inheritdoc}
+     */
+    public static function tableName()
+    {
+        return 'users';
+    }
 
     /**
      * {@inheritdoc}
      */
     public static function findIdentity($id)
     {
-        return isset(self::$users[$id]) ? new static(self::$users[$id]) : null;
+        if ($dbUser = Users::findOne($id)) {
+                $user = [
+                    'id' => $dbUser->id,
+                    'username' => $dbUser->username,
+                    'password' => $dbUser->password,
+                    'authKey' => $dbUser->auth_key,
+                    'accessToken' => $dbUser->access_token,
+                ];
+                return new static($user);
+
+        }
+        else {
+            return null;
+        }
+        //return isset(self::$users[$id]) ? new static(self::$users[$id]) : null;
     }
+
+
 
     /**
      * {@inheritdoc}
      */
     public static function findIdentityByAccessToken($token, $type = null)
     {
-        foreach (self::$users as $user) {
+/*        foreach (self::$users as $user) {
             if ($user['accessToken'] === $token) {
                 return new static($user);
             }
-        }
+        }*/
 
         return null;
     }
@@ -58,13 +85,25 @@ class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
      */
     public static function findByUsername($username)
     {
-        foreach (self::$users as $user) {
+        if ($dbUser = Users::findOne(['username' => $username])) {
+            $user = [
+                'id' => $dbUser->id,
+                'username' => $dbUser->username,
+                'password' => $dbUser->password,
+                'authKey' => $dbUser->auth_key,
+                'accessToken' => $dbUser->access_token,
+            ];
+            return new static($user);
+        } else {
+            return null;
+        }
+        /*foreach (self::$users as $user) {
             if (strcasecmp($user['username'], $username) === 0) {
                 return new static($user);
             }
         }
 
-        return null;
+        return null;*/
     }
 
     /**
@@ -74,6 +113,12 @@ class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
     {
         return $this->id;
     }
+
+    public function getUsername()
+    {
+        return $this->username;
+    }
+
 
     /**
      * {@inheritdoc}

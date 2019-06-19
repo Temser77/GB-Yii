@@ -31,3 +31,10 @@ tests/_support/_generated
 
 #vagrant folder
 /.vagrant
+
+#myfiles
+1.htaccess
+web/1.htaccess
+/Algorithms
+/Yii_lectures
+/sandbox
